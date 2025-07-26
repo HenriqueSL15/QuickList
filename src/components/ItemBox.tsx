@@ -11,8 +11,8 @@ export default function ItemBox({
   realQuantity,
   price,
   realPrice,
+  minimized,
 }) {
-  const changeCheckedList = useListStore((state) => state.toggleItemChecked);
   const updateCurrentList = useListStore((state) => state.updateCurrentList);
   const removeItem = useListStore((state) => state.removeItem);
 
@@ -34,7 +34,9 @@ export default function ItemBox({
     <View className="bg-card shadow-md rounded-lg p-4 mb-4 border border-input gap-6">
       <View className="flex-row justify-between">
         <View className="flex-row gap-3">
-          <TouchableWithoutFeedback onPress={() => changeCheckedList(id)}>
+          <TouchableWithoutFeedback
+            onPress={() => handleInputChage(id, "checked", !checked)}
+          >
             {checked ? (
               <View className="border border-emerald-500 rounded-md min-h-6 min-w-6"></View>
             ) : (
@@ -49,14 +51,35 @@ export default function ItemBox({
 
           <Text>Já comprado</Text>
         </View>
-        <TouchableWithoutFeedback onPress={() => removeItem(id)}>
-          <FontAwesome6
-            name="trash-can"
-            color="red"
-            size={20}
-            iconStyle="solid"
-          />
-        </TouchableWithoutFeedback>
+        <View className="flex-row gap-3">
+          <TouchableWithoutFeedback
+            onPress={() => updateCurrentList(id, "minimized", !minimized)}
+          >
+            {minimized ? (
+              <FontAwesome6
+                name="angle-up"
+                color="green"
+                size={20}
+                iconStyle="solid"
+              />
+            ) : (
+              <FontAwesome6
+                name="angle-down"
+                color="green"
+                size={20}
+                iconStyle="solid"
+              />
+            )}
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => removeItem(id)}>
+            <FontAwesome6
+              name="trash-can"
+              color="red"
+              size={20}
+              iconStyle="solid"
+            />
+          </TouchableWithoutFeedback>
+        </View>
       </View>
       <TextInput
         className="w-full h-10 rounded-lg border border-input bg-background px-3 py-2"

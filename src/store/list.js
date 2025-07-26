@@ -14,6 +14,7 @@ const useListStore = create((set) => ({
         realQuantity: 0,
         price: 10.0,
         realPrice: 15.0,
+        minimized: true,
       },
       {
         id: 2,
@@ -23,6 +24,7 @@ const useListStore = create((set) => ({
         realQuantity: 0,
         price: 10.0,
         realPrice: 15.0,
+        minimized: true,
       },
     ],
   },
@@ -36,14 +38,6 @@ const useListStore = create((set) => ({
         ),
       },
     })),
-  updateAreThereChanges: () => {
-    set((state) => ({
-      currentList: {
-        ...state.currentList,
-        areThereChanges: false,
-      },
-    }));
-  },
   addItem: (item) => {
     set((state) => ({
       currentList: {

@@ -17,6 +17,7 @@ import useListStore from "../store/list";
 import "../../global.css";
 import NewItemButton from "../components/NewItemButton";
 import ItemBox from "../components/ItemBox";
+import MinimizedItemBox from "../components/MinimizedItemBox";
 
 export default function Index() {
   const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
@@ -74,12 +75,16 @@ export default function Index() {
           <NewItemButton />
           <View className="gap-0">
             {filteredList.map((item) => {
-              return <ItemBox {...item} key={item.id} />;
+              if (!item.minimized) {
+                return <ItemBox {...item} key={item.id} />;
+              } else {
+                return <MinimizedItemBox {...item} key={item.id} />;
+              }
             })}
           </View>
         </ScrollView>
       )}
-      <View className="mx-5 mt-5 gap-3">
+      <View className="mx-5 mt-5 mb-10 gap-3">
         <View className="w-full flex-row justify-between">
           <View className="w-[47%] rounded-lg border border-input text-card-foreground shadow-sm p-3 bg-primary/5 items-center">
             <Text className="text-lg mb-1">Itens Planejados</Text>
