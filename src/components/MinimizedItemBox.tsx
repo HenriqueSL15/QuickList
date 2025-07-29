@@ -2,6 +2,7 @@ import React from "react";
 import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 import { View, Text, TouchableWithoutFeedback } from "react-native";
 import useListStore from "../store/list";
+import { setUserData } from "../app/utils/user.utils";
 
 export default function MinimizedItemBox({ id, checked, name, minimized }) {
   const updateCurrentList = useListStore((state) => state.updateCurrentList);
@@ -19,6 +20,9 @@ export default function MinimizedItemBox({ id, checked, name, minimized }) {
     } else {
       updateCurrentList(id, field, value);
     }
+
+    const userData = useListStore.getState().currentList;
+    setUserData(userData);
   };
 
   return (

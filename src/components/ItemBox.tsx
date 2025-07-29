@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 import { View, Text, TouchableWithoutFeedback, TextInput } from "react-native";
 import useListStore from "../store/list";
+import { setUserData } from "../app/utils/user.utils";
 
 export default function ItemBox({
   id,
@@ -15,6 +16,7 @@ export default function ItemBox({
 }) {
   const updateCurrentList = useListStore((state) => state.updateCurrentList);
   const removeItem = useListStore((state) => state.removeItem);
+  const currentList = useListStore((state) => state.currentList);
 
   const handleInputChage = (id, field, value) => {
     if (field === "price" || field === "realPrice") {
@@ -28,6 +30,46 @@ export default function ItemBox({
     } else {
       updateCurrentList(id, field, value);
     }
+
+    const userData = useListStore.getState().currentList;
+    setUserData(userData);
+  };
+
+  const total = () => {
+    let sum = 0;
+    let quantity = 0;
+
+    currentList.items.forEach((item) => {
+      sum += item.quantity * item.price;
+      quantity += item.quantity;
+    });
+
+    return {
+      quantity,
+      total: sum,
+    };
+  };
+
+  const realTotal = () => {
+    let realSum = 0;
+    let realQuantity = 0;
+
+    if (currentList.length < 0) return { quantity: 0, total: 0 };
+
+    currentList?.items?.forEach((item) => {
+      const price = item.realPrice != 0 ? item.realPrice : item.price;
+      const quantity =
+        item.realQuantity != 0 ? item.realQuantity : item.quantity;
+
+      realSum += price * quantity;
+
+      realQuantity += quantity;
+    });
+
+    return {
+      quantity: realQuantity,
+      total: realSum,
+    };
   };
 
   return (
@@ -132,14 +174,14 @@ export default function ItemBox({
         <View className="w-[47%]">
           <Text className="text-xs text-muted-foreground">Total Planejado</Text>
           <Text className="font-medium">
-            R$ {(price * quantity).toFixed(2).replace(".", ",")}
+            R$ {total().total.toFixed(2).replace(".", ",")}
           </Text>
         </View>
 
         <View className="w-[47%] items-end">
           <Text className="text-xs text-muted-foreground">Total Real</Text>
           <Text className="font-medium text-primary">
-            R$ {(realPrice * realQuantity).toFixed(2).replace(".", ",")}
+            R$ {realTotal().total.toFixed(2).replace(".", ",")}
           </Text>
         </View>
       </View>

@@ -1,28 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Text,
-  TextInput,
-  Alert,
-  ScrollView,
-} from "react-native";
+import { View, Text, ScrollView } from "react-native";
 
-import Sidebar from "../components/Sidebar";
-
-import useSidebarStore from "../store/sidebar";
 import useListStore from "../store/list";
 
 import "../../global.css";
 import NewItemButton from "../components/NewItemButton";
 import ItemBox from "../components/ItemBox";
 import MinimizedItemBox from "../components/MinimizedItemBox";
+import { initialize } from "./utils/user.utils";
 
 export default function Index() {
-  const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
-  const closeSidebar = useSidebarStore((state) => state.closeSidebar);
-
   const currentList = useListStore((state) => state.currentList);
 
   const total = () => {
@@ -44,7 +31,9 @@ export default function Index() {
     let realSum = 0;
     let realQuantity = 0;
 
-    currentList.items.forEach((item) => {
+    if (currentList.length < 0) return { quantity: 0, total: 0 };
+
+    currentList?.items?.forEach((item) => {
       const price = item.realPrice != 0 ? item.realPrice : item.price;
       const quantity =
         item.realQuantity != 0 ? item.realQuantity : item.quantity;
@@ -60,12 +49,24 @@ export default function Index() {
     };
   };
 
-  const filteredList = currentList.items.slice().sort((a, b) => {
+  const filteredList = currentList?.items?.slice().sort((a, b) => {
     if (a.checked === b.checked) {
       return a.name.localeCompare(b.name);
     }
     return a.checked ? -1 : 1;
   });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userData = await initialize();
+      // const setList = useListStore((state) => state.setList);
+      const setList = useListStore.getState().setList;
+      setList(userData);
+      console.log("User data set in store:", userData);
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <View className="flex-1 bg-background">
