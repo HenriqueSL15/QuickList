@@ -9,6 +9,12 @@ import { realTotal, total } from "../app/utils/totals.utils";
 
 import Item from "../app/types/Item";
 
+/**
+ * Componente que representa um único item na lista de compras.
+ * Exibe detalhes do item e permite edição e interação.
+ *
+ * @param {Item} props - As propriedades do item, incluindo id, status checked, nome, quantidades, preços e estado minimizado.
+ */
 export default function ItemBox({
   id,
   checked,
@@ -19,23 +25,40 @@ export default function ItemBox({
   realPrice,
   minimized,
 }: Item) {
+  // Hooks do Zustand para atualizar a lista e remover itens
   const updateCurrentList = useListStore((state) => state.updateCurrentList);
   const removeItem = useListStore((state) => state.removeItem);
   const currentList = useListStore((state) => state.currentList);
 
-  const handleInputChage = (id: number, field: string, value: string): void => {
+  /**
+   * Manipula mudanças nos campos de entrada, sanitizando e atualizando a store conforme necessário.
+   * Também persiste os dados do usuário após a atualização.
+   *
+   * @param {number} id - O id do item que está sendo atualizado.
+   * @param {string} field - O nome do campo que está sendo atualizado.
+   * @param {string} value - O novo valor do campo.
+   */
+  const handleInputChage = (
+    id: number,
+    field: keyof Item,
+    value: string
+  ): void => {
     if (field === "price" || field === "realPrice") {
+      // Permite apenas números, pontos e vírgulas; converte vírgula para ponto para valor numérico
       const filteredValue = value.replace(/[^0-9.,]/g, "");
       const numericValue = filteredValue.replace(",", ".");
       updateCurrentList(id, field, numericValue);
     } else if (field === "quantity" || field === "realQuantity") {
+      // Permite apenas números, pontos e vírgulas; converte para número
       const filteredValue = value.replace(/[^0-9.,]/g, "");
       const numericValue = Number(filteredValue);
       updateCurrentList(id, field, numericValue);
     } else {
+      // Para outros campos, atualiza diretamente
       updateCurrentList(id, field, value);
     }
 
+    // Persiste a lista atualizada nos dados do usuário
     const userData = useListStore.getState().currentList;
     setUserData(userData);
   };
@@ -44,6 +67,7 @@ export default function ItemBox({
     <View className="bg-card shadow-md rounded-lg p-4 mb-4 border border-input gap-6">
       <View className="flex-row justify-between">
         <View className="flex-row gap-3">
+          {/* Alternar checkbox para status checked do item */}
           <TouchableWithoutFeedback
             onPress={() => handleInputChage(id, "checked", !checked as any)}
           >
@@ -62,6 +86,7 @@ export default function ItemBox({
           <Text>Já comprado</Text>
         </View>
         <View className="flex-row gap-3">
+          {/* Alternar estado minimizado */}
           <TouchableWithoutFeedback
             onPress={() => updateCurrentList(id, "minimized", !minimized)}
           >
@@ -81,6 +106,7 @@ export default function ItemBox({
               />
             )}
           </TouchableWithoutFeedback>
+          {/* Botão para remover item */}
           <TouchableWithoutFeedback onPress={() => removeItem(id)}>
             <FontAwesome6
               name="trash-can"
@@ -91,6 +117,7 @@ export default function ItemBox({
           </TouchableWithoutFeedback>
         </View>
       </View>
+      {/* Entrada para nome do item */}
       <TextInput
         className="w-full h-10 rounded-lg border border-input bg-background px-3 py-2"
         placeholder="Nome do Produto"
@@ -99,6 +126,7 @@ export default function ItemBox({
       />
 
       <View className="flex-row justify-between">
+        {/* Entrada para quantidade */}
         <View className="w-[47%]">
           <Text className="text-xs">Qtd</Text>
           <TextInput
@@ -108,6 +136,7 @@ export default function ItemBox({
             onChangeText={(text) => handleInputChage(id, "quantity", text)}
           />
         </View>
+        {/* Entrada para quantidade real */}
         <View className="w-[47%]">
           <Text className="text-xs">Qtd. Real</Text>
           <TextInput
@@ -119,6 +148,7 @@ export default function ItemBox({
         </View>
       </View>
       <View className="flex-row justify-between">
+        {/* Entrada para preço */}
         <View className="w-[47%]">
           <Text className="text-xs">Preço</Text>
           <TextInput
@@ -128,6 +158,7 @@ export default function ItemBox({
             onChangeText={(text) => handleInputChage(id, "price", text)}
           />
         </View>
+        {/* Entrada para preço real */}
         <View className="w-[47%]">
           <Text className="text-xs">Preço Real</Text>
           <TextInput
@@ -139,6 +170,7 @@ export default function ItemBox({
         </View>
       </View>
       <View className="flex-row justify-between">
+        {/* Exibe total planejado */}
         <View className="w-[47%]">
           <Text className="text-xs text-muted-foreground">Total Planejado</Text>
           <Text className="font-medium">
@@ -146,6 +178,7 @@ export default function ItemBox({
           </Text>
         </View>
 
+        {/* Exibe total real */}
         <View className="w-[47%] items-end">
           <Text className="text-xs text-muted-foreground">Total Real</Text>
           <Text className="font-medium text-primary">
