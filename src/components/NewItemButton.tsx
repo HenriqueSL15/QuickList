@@ -1,14 +1,18 @@
 import { TouchableOpacity, View, Text } from "react-native";
 import useListStore from "../store/list";
 import { setUserData } from "../app/utils/user.utils";
+import Item from "../app/types/Item";
 
 export default function NewItemButton() {
   const currentList = useListStore((state) => state.currentList);
   const addItem = useListStore((state) => state.addItem);
 
-  const highestId = currentList.items.reduce((highestId, currentItem) => {
-    return Math.max(highestId, currentItem.id);
-  }, 0);
+  const highestId = currentList.items.reduce(
+    (highestId: number, currentItem: Item) => {
+      return Math.max(highestId, currentItem.id);
+    },
+    0
+  );
 
   const defaultItem = {
     id: highestId + 1,

@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useListStore from "@/src/store/list";
+import CurrentList from "../types/CurrentList";
 
 // Função para obter informações do usuário
 const getUserData = async () => {
@@ -14,7 +15,7 @@ const getUserData = async () => {
 };
 
 // Função para definir informações do usuário
-const setUserData = async (userData) => {
+const setUserData = async (userData: CurrentList) => {
   try {
     const jsonValue = JSON.stringify(userData);
     await AsyncStorage.setItem("user_data", jsonValue);

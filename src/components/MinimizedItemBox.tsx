@@ -3,12 +3,19 @@ import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 import { View, Text, TouchableWithoutFeedback } from "react-native";
 import useListStore from "../store/list";
 import { setUserData } from "../app/utils/user.utils";
+import Item from "../app/types/Item";
+import MinimizedItem from "../app/types/MinimizedItem";
 
-export default function MinimizedItemBox({ id, checked, name, minimized }) {
+export default function MinimizedItemBox({
+  id,
+  checked,
+  name,
+  minimized,
+}: MinimizedItem) {
   const updateCurrentList = useListStore((state) => state.updateCurrentList);
   const removeItem = useListStore((state) => state.removeItem);
 
-  const handleInputChage = (id, field, value) => {
+  const handleInputChage = (id: number, field: string, value: string) => {
     if (field === "price" || field === "realPrice") {
       const filteredValue = value.replace(/[^0-9.,]/g, "");
       const numericValue = filteredValue.replace(",", ".");
@@ -29,7 +36,7 @@ export default function MinimizedItemBox({ id, checked, name, minimized }) {
     <View className="bg-card shadow-md rounded-lg p-4 mb-4 border border-input flex-row justify-between">
       <View className="flex-row gap-3">
         <TouchableWithoutFeedback
-          onPress={() => handleInputChage(id, "checked", !checked)}
+          onPress={() => handleInputChage(id, "checked", !checked as any)}
         >
           {checked ? (
             <View className="border border-emerald-500 rounded-md min-h-6 min-w-6"></View>

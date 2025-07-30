@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 import { View, Text, TouchableWithoutFeedback, TextInput } from "react-native";
+
 import useListStore from "../store/list";
+
 import { setUserData } from "../app/utils/user.utils";
+import { realTotal, total } from "../app/utils/totals.utils";
+
+import Item from "../app/types/Item";
 
 export default function ItemBox({
   id,
@@ -13,12 +18,12 @@ export default function ItemBox({
   price,
   realPrice,
   minimized,
-}) {
+}: Item) {
   const updateCurrentList = useListStore((state) => state.updateCurrentList);
   const removeItem = useListStore((state) => state.removeItem);
   const currentList = useListStore((state) => state.currentList);
 
-  const handleInputChage = (id, field, value) => {
+  const handleInputChage = (id: number, field: string, value: string): void => {
     if (field === "price" || field === "realPrice") {
       const filteredValue = value.replace(/[^0-9.,]/g, "");
       const numericValue = filteredValue.replace(",", ".");
@@ -35,49 +40,12 @@ export default function ItemBox({
     setUserData(userData);
   };
 
-  const total = () => {
-    let sum = 0;
-    let quantity = 0;
-
-    currentList.items.forEach((item) => {
-      sum += item.quantity * item.price;
-      quantity += item.quantity;
-    });
-
-    return {
-      quantity,
-      total: sum,
-    };
-  };
-
-  const realTotal = () => {
-    let realSum = 0;
-    let realQuantity = 0;
-
-    if (currentList.length < 0) return { quantity: 0, total: 0 };
-
-    currentList?.items?.forEach((item) => {
-      const price = item.realPrice != 0 ? item.realPrice : item.price;
-      const quantity =
-        item.realQuantity != 0 ? item.realQuantity : item.quantity;
-
-      realSum += price * quantity;
-
-      realQuantity += quantity;
-    });
-
-    return {
-      quantity: realQuantity,
-      total: realSum,
-    };
-  };
-
   return (
     <View className="bg-card shadow-md rounded-lg p-4 mb-4 border border-input gap-6">
       <View className="flex-row justify-between">
         <View className="flex-row gap-3">
           <TouchableWithoutFeedback
-            onPress={() => handleInputChage(id, "checked", !checked)}
+            onPress={() => handleInputChage(id, "checked", !checked as any)}
           >
             {checked ? (
               <View className="border border-emerald-500 rounded-md min-h-6 min-w-6"></View>
@@ -174,14 +142,14 @@ export default function ItemBox({
         <View className="w-[47%]">
           <Text className="text-xs text-muted-foreground">Total Planejado</Text>
           <Text className="font-medium">
-            R$ {total().total.toFixed(2).replace(".", ",")}
+            R$ {total(currentList).total.toFixed(2).replace(".", ",")}
           </Text>
         </View>
 
         <View className="w-[47%] items-end">
           <Text className="text-xs text-muted-foreground">Total Real</Text>
           <Text className="font-medium text-primary">
-            R$ {realTotal().total.toFixed(2).replace(".", ",")}
+            R$ {realTotal(currentList).total.toFixed(2).replace(".", ",")}
           </Text>
         </View>
       </View>

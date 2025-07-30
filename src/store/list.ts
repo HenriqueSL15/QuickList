@@ -1,8 +1,9 @@
 import { create } from "zustand";
+import ListState from "../app/types/ListState";
 
-const useListStore = create((set) => ({
+const useListStore = create<ListState>((set) => ({
   currentList: {
-    title: "NÃO DEU CERTO",
+    title: "Lista de Compras",
     items: [],
   },
   setList: (list) =>

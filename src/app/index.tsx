@@ -1,55 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 
 import useListStore from "../store/list";
 
 import "../../global.css";
+
 import NewItemButton from "../components/NewItemButton";
 import ItemBox from "../components/ItemBox";
 import MinimizedItemBox from "../components/MinimizedItemBox";
+
 import { initialize } from "./utils/user.utils";
+import { realTotal, total } from "./utils/totals.utils";
+import Item from "./types/Item";
 
 export default function Index() {
   const currentList = useListStore((state) => state.currentList);
 
-  const total = () => {
-    let sum = 0;
-    let quantity = 0;
-
-    currentList.items.forEach((item) => {
-      sum += item.quantity * item.price;
-      quantity += item.quantity;
-    });
-
-    return {
-      quantity,
-      total: sum,
-    };
-  };
-
-  const realTotal = () => {
-    let realSum = 0;
-    let realQuantity = 0;
-
-    if (currentList.length < 0) return { quantity: 0, total: 0 };
-
-    currentList?.items?.forEach((item) => {
-      const price = item.realPrice != 0 ? item.realPrice : item.price;
-      const quantity =
-        item.realQuantity != 0 ? item.realQuantity : item.quantity;
-
-      realSum += price * quantity;
-
-      realQuantity += quantity;
-    });
-
-    return {
-      quantity: realQuantity,
-      total: realSum,
-    };
-  };
-
-  const filteredList = currentList?.items?.slice().sort((a, b) => {
+  const filteredList = currentList?.items?.slice().sort((a: Item, b: Item) => {
     if (a.checked === b.checked) {
       return a.name.localeCompare(b.name);
     }
@@ -59,7 +26,6 @@ export default function Index() {
   useEffect(() => {
     const fetchUserData = async () => {
       const userData = await initialize();
-      // const setList = useListStore((state) => state.setList);
       const setList = useListStore.getState().setList;
       setList(userData);
       console.log("User data set in store:", userData);
@@ -75,7 +41,7 @@ export default function Index() {
           <Text className="text-2xl font-semibold">{currentList.title}</Text>
           <NewItemButton />
           <View className="gap-0">
-            {filteredList.map((item) => {
+            {filteredList.map((item: Item) => {
               if (!item.minimized) {
                 return <ItemBox {...item} key={item.id} />;
               } else {
@@ -89,12 +55,14 @@ export default function Index() {
         <View className="w-full flex-row justify-between">
           <View className="w-[47%] rounded-lg border border-input text-card-foreground shadow-sm p-3 bg-primary/5 items-center">
             <Text className="text-lg mb-1">Itens Planejados</Text>
-            <Text className="text-xl font-bold">{total().quantity}</Text>
+            <Text className="text-xl font-bold">
+              {total(currentList).quantity}
+            </Text>
           </View>
           <View className="w-[47%] rounded-lg border border-input text-card-foreground shadow-sm p-3 bg-primary/5 items-center">
             <Text className="text-lg mb-1">Itens Reais</Text>
             <Text className="text-xl font-bold text-primary">
-              {realTotal().quantity}
+              {realTotal(currentList).quantity}
             </Text>
           </View>
         </View>
@@ -102,13 +70,13 @@ export default function Index() {
           <View className="w-[47%] rounded-lg border border-input text-card-foreground shadow-sm p-3 bg-primary/5 items-center">
             <Text className="text-lg mb-1">Total Planejado</Text>
             <Text className="text-xl font-bold">
-              R$ {total().total.toFixed(2).replace(".", ",")}
+              R$ {total(currentList).total.toFixed(2).replace(".", ",")}
             </Text>
           </View>
           <View className="w-[47%] rounded-lg border border-input text-card-foreground shadow-sm p-3 bg-primary/5 items-center">
             <Text className="text-lg mb-1">Total Real</Text>
             <Text className="text-xl font-bold text-primary">
-              R$ {realTotal().total.toFixed(2).replace(".", ",")}
+              R$ {realTotal(currentList).total.toFixed(2).replace(".", ",")}
             </Text>
           </View>
         </View>
