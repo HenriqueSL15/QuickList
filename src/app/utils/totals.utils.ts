@@ -53,4 +53,47 @@ const realTotal = (currentList: CurrentList) => {
   };
 };
 
-export { realTotal, total };
+/**
+ * Calcula a quantidade total e o preço total do item atual,
+ * @param currentItem - O item atual.
+ * @returns Um objeto contendo a quantidade total e o preço total.
+ */
+const itemTotal = (currentItem: Item) => {
+  // Retorna totais zero se o item estiver indefinido
+  if (!currentItem) return { quantity: 0, total: 0 };
+
+  // Multiplica o preço * quantidade para o item
+  const sum = currentItem.quantity * currentItem.price;
+
+  return {
+    quantity: currentItem.quantity,
+    total: sum,
+  };
+};
+
+/**
+ * Calcula a quantidade real total e o preço real total do item atual,
+ * @param currentItem - O item atual.
+ * @returns Um objeto contendo a quantidade real total e o preço real total.
+ */
+const realItemTotal = (currentItem: Item) => {
+  // Retorna totais zero se o item estiver indefinido
+  if (!currentItem) return { quantity: 0, total: 0 };
+
+  // Soma a quantidade e o preço * quantidade para o item
+  const realPrice =
+    currentItem.realPrice > 0 ? currentItem.realPrice : currentItem.price;
+  const realQuantity =
+    currentItem.realQuantity > 0
+      ? currentItem.realQuantity
+      : currentItem.quantity;
+
+  const sum = realPrice * realQuantity;
+
+  return {
+    quantity: realQuantity,
+    total: sum,
+  };
+};
+
+export { realTotal, total, itemTotal, realItemTotal };

@@ -5,7 +5,7 @@ import { View, Text, TouchableWithoutFeedback, TextInput } from "react-native";
 import useListStore from "../store/list";
 
 import { setUserData } from "../app/utils/user.utils";
-import { realTotal, total } from "../app/utils/totals.utils";
+import { realItemTotal, itemTotal } from "../app/utils/totals.utils";
 
 import Item from "../app/types/Item";
 
@@ -25,6 +25,18 @@ export default function ItemBox({
   realPrice,
   minimized,
 }: Item) {
+  // Item atual
+  const currentItem = {
+    id,
+    checked,
+    name,
+    quantity,
+    realQuantity,
+    price,
+    realPrice,
+    minimized,
+  };
+
   // Hooks do Zustand para atualizar a lista e remover itens
   const updateCurrentList = useListStore((state) => state.updateCurrentList);
   const removeItem = useListStore((state) => state.removeItem);
@@ -174,7 +186,7 @@ export default function ItemBox({
         <View className="w-[47%]">
           <Text className="text-xs text-muted-foreground">Total Planejado</Text>
           <Text className="font-medium">
-            R$ {total(currentList).total.toFixed(2).replace(".", ",")}
+            R$ {itemTotal(currentItem).total.toFixed(2).replace(".", ",")}
           </Text>
         </View>
 
@@ -182,7 +194,7 @@ export default function ItemBox({
         <View className="w-[47%] items-end">
           <Text className="text-xs text-muted-foreground">Total Real</Text>
           <Text className="font-medium text-primary">
-            R$ {realTotal(currentList).total.toFixed(2).replace(".", ",")}
+            R$ {realItemTotal(currentItem).total.toFixed(2).replace(".", ",")}
           </Text>
         </View>
       </View>
