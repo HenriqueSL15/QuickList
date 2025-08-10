@@ -10,6 +10,7 @@ interface Item {
   price: number;
   realPrice: number;
   minimized: boolean;
+  shopNumber: number;
 }
 
 export default Item;

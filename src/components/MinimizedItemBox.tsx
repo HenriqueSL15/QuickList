@@ -84,14 +84,14 @@ export default function MinimizedItemBox({
         >
           {minimized ? (
             <FontAwesome6
-              name="angle-up"
+              name="angle-down"
               color="green"
               size={20}
               iconStyle="solid"
             />
           ) : (
             <FontAwesome6
-              name="angle-down"
+              name="angle-up"
               color="green"
               size={20}
               iconStyle="solid"

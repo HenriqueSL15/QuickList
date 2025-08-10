@@ -24,6 +24,7 @@ export default function ItemBox({
   price,
   realPrice,
   minimized,
+  shopNumber,
 }: Item) {
   // Item atual
   const currentItem = {
@@ -35,6 +36,7 @@ export default function ItemBox({
     price,
     realPrice,
     minimized,
+    shopNumber,
   };
 
   // Hooks do Zustand para atualizar a lista e remover itens
@@ -104,14 +106,14 @@ export default function ItemBox({
           >
             {minimized ? (
               <FontAwesome6
-                name="angle-up"
+                name="angle-down"
                 color="green"
                 size={20}
                 iconStyle="solid"
               />
             ) : (
               <FontAwesome6
-                name="angle-down"
+                name="angle-up"
                 color="green"
                 size={20}
                 iconStyle="solid"
@@ -128,6 +130,44 @@ export default function ItemBox({
             />
           </TouchableWithoutFeedback>
         </View>
+      </View>
+      <View className="flex-row gap-3">
+        <TouchableWithoutFeedback
+          onPress={() => updateCurrentList(id, "shopNumber", 0)}
+        >
+          <Text
+            className={`p-2 text-xl rounded-lg border border-black ${shopNumber == 0 && "bg-gray-200"}`}
+          >
+            1
+          </Text>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          onPress={() => updateCurrentList(id, "shopNumber", 1)}
+        >
+          <Text
+            className={`p-2 text-xl rounded-lg border border-black ${shopNumber == 1 && "bg-gray-200"}`}
+          >
+            2
+          </Text>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          onPress={() => updateCurrentList(id, "shopNumber", 2)}
+        >
+          <Text
+            className={`p-2 text-xl rounded-lg border border-black ${shopNumber == 2 && "bg-gray-200"}`}
+          >
+            3
+          </Text>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          onPress={() => updateCurrentList(id, "shopNumber", 3)}
+        >
+          <Text
+            className={`p-2 text-xl rounded-lg border border-black ${shopNumber == 3 && "bg-gray-200"}`}
+          >
+            4
+          </Text>
+        </TouchableWithoutFeedback>
       </View>
       {/* Entrada para nome do item */}
       <TextInput

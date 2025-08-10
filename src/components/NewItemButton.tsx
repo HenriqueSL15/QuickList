@@ -30,6 +30,7 @@ export default function NewItemButton() {
     price: 0,
     realPrice: 0,
     minimized: false,
+    shopNumber: 0,
   };
 
   /**

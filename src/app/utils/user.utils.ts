@@ -42,12 +42,18 @@ const initializeUserData = async () => {
     // Se não houver dados, cria dados padrão
     userData = {
       title: "Lista 1",
+      minimizedShops: [],
       items: [],
     };
 
     await setUserData(userData);
     console.log("Dados do usuário criados e salvos!");
   } else {
+    // Ensure minimizedShops exists for backward compatibility
+    if (!userData.minimizedShops) {
+      userData.minimizedShops = [];
+      await setUserData(userData);
+    }
     console.log("Dados do usuário recuperados com sucesso!");
   }
   return userData;

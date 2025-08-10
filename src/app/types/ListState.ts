@@ -27,7 +27,6 @@ interface ListState {
     field: keyof Item,
     value: string | number | boolean
   ) => void;
-
   /**
    * Adiciona um novo item à lista atual.
    * @param item - O objeto Item a ser adicionado.
@@ -45,6 +44,12 @@ interface ListState {
    * @param id - O id do item a ser alternado.
    */
   toggleItemChecked: (id: number) => void;
+
+  /**
+   * Alterna a minimização de uma loja específica.
+   * @param shopNumber - O número da loja a ser alternada (0-3).
+   */
+  toggleShopMinimized: (shopNumber: number) => void;
 }
 
 export default ListState;

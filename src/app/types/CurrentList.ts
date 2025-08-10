@@ -6,6 +6,7 @@ import Item from "./Item";
  */
 interface CurrentList {
   title: string;
+  minimizedShops: number[];
   items: Item[];
 }
 

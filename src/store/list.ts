@@ -9,6 +9,7 @@ const useListStore = create<ListState>((set) => ({
   // Estado inicial com título padrão e array vazio de itens
   currentList: {
     title: "Lista de Compras",
+    minimizedShops: [],
     items: [],
   },
 
@@ -76,6 +77,26 @@ const useListStore = create<ListState>((set) => ({
         ),
       },
     }));
+  },
+
+  /**
+   * Alterna a minimização de uma loja específica.
+   * @param shopNumber - O número da loja a ser alternada (0-3).
+   */
+  toggleShopMinimized: (shopNumber) => {
+    set((state) => {
+      const isMinimized = state.currentList.minimizedShops.includes(shopNumber);
+      const newMinimizedShops = isMinimized
+        ? state.currentList.minimizedShops.filter((num) => num !== shopNumber)
+        : [...state.currentList.minimizedShops, shopNumber];
+      
+      return {
+        currentList: {
+          ...state.currentList,
+          minimizedShops: newMinimizedShops,
+        },
+      };
+    });
   },
 }));
 
